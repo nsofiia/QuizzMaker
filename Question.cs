@@ -5,39 +5,46 @@ namespace QuizzMaker
 {
     public class Question
     {
-        string title;
-        string allAnswers;
+        public string title;
+        public string allAnswers;
+
 
 
 
         /// <summary>
-        /// constructor
+        /// get title string
         /// </summary>
-        /// <param name="qTitle"></param>
-        /// <param name="qAnswers"></param>
-        public Question()
+        /// <returns></returns>
+        public static string GetQuestionTitle()
         {
-            EnterTitleMessage();
+            PrintEnterTitleMessage();
             string qTitle = Console.ReadLine();
 
-            while (!qTitle.Contains("?") || qTitle.Length < 6)
+            while (!qTitle.Contains('?') || qTitle.Length < 6)
             {
-                ErrorTitleMessage();
+                PrintErrorTitleMessage();
                 qTitle = Console.ReadLine();
             }
-
-            EnterAnswersMessage();
-            string answers = Console.ReadLine();
-
-            while (!answers.Contains(",") || !answers.Contains("*"))
-            {
-                ErrorAnswersMessage();
-                answers = Console.ReadLine();
-            }
-
+            return qTitle;
         }
 
 
+        /// <summary>
+        /// get all answers
+        /// </summary>
+        /// <returns></returns>
+        public static string getAllAnswers()
+        {
+            PrintEnterAnswersMessage();
+            string answers = Console.ReadLine();
+
+            while (!answers.Contains(',') || !answers.Contains(','))
+            {
+                PrintErrorAnswersMessage();
+                answers = Console.ReadLine();
+            }
+            return answers;
+        }
 
     }
 }

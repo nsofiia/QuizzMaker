@@ -4,36 +4,57 @@ namespace QuizzMaker
     public class UI
     {
         
-        public static void EnterTitleMessage()
+        public static void PrintEnterTitleMessage()
         {
-            Console.WriteLine("\nEnter the question following the question mark at the end (?)");
+            Console.WriteLine("\nEnter the question, following the question mark at the end (?)\n");
         }
 
-        public static void ErrorTitleMessage()
+        public static void PrintErrorTitleMessage()
         {
-            Console.WriteLine("Question must contain more than 6 characters and a question mark (?)");
+            Console.WriteLine("\nQuestion must contain more than 6 characters and a question mark (?)\n");
         }
 
-        public static void EnterAnswersMessage()
+        public static void PrintEnterAnswersMessage()
         {
-            Console.WriteLine("Enter at least 2 answers, each answer separated with coma. Add an asterisk symbol (*) to indicate the correct answers");
+            Console.WriteLine("\nEnter at least 2 answers, each answer separated with coma. Add an asterisk symbol (*) to indicate the correct answers\n");
         }
 
-        public static void ErrorAnswersMessage()
+        public static void PrintErrorAnswersMessage()
         {
-            Console.WriteLine("Enter at least 2 comma separated answers, add at least 1 correct answer, indicated with asteriks (*)");
+            Console.WriteLine("\nEnter at least 2 comma separated answers, add at least 1 correct answer, indicated with asteriks (*)\n");
         }
 
-        public static void Intro()
+        public static void PrintIntro()
         {
             Console.WriteLine("Test knowledge by creating a quizz!\n");
         }
 
-        public static char Continue()
+        public static char PrintContinueChoises()
         {
-            Console.WriteLine("Add another question? Y - to add another, any other key to continue");
+            Console.WriteLine("\nAdd another question? Y - to add another, any other key to continue\n");
+            //save and exit
             char oneMore = Char.ToUpper(Console.ReadKey().KeyChar);
             return oneMore;
+        }
+
+        public static char PrintStartTestChoises()
+        {
+            Console.WriteLine("\nRun test? Y - to start, any other key to SAVE and EXIT\n");
+            char test = Char.ToUpper(Console.ReadKey().KeyChar);
+            return test;
+        }
+
+        public static void PrintTestKnowledgeIntro()
+        {
+            Console.Clear();
+            Console.WriteLine("\nTest is about to start!\nFor each randomly selected question you will be presented with a list of answers. Enter the letters that correspond with the correct answers.\n");
+        }
+
+        public static void PrintPressAnyKeyToContinue()
+        {
+            Console.WriteLine("\n\nWhen you are ready press any key to continue\n");
+            Console.ReadKey();
+
         }
     }
 }
