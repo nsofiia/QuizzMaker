@@ -77,10 +77,10 @@ class Program
 
                 questionsList.Remove(questionsList[randomQuestion]); //remove answered question from list of questions to display
 
-                score += oneCorrectAnswer * answeredCorrectlyTimes;
+                score += oneCorrectAnswer;
 
             }
-            PrintScore(score, MAX_SCORE);
+            PrintScore(score, MAX_SCORE);   
             PrintPressAnyKeyToContinue();
             return;
         }
