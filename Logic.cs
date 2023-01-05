@@ -30,9 +30,15 @@ namespace QuizzMaker
         /// <param name="list"></param>
         public static List<Question> RetrieveDataFromXml(XmlSerializer fileXml, List<Question> list)
         {
-            using (FileStream file = File.OpenRead(PATH)) // retrieve the list from saved xml
+            try {
+                using (FileStream file = File.OpenRead(PATH)) // retrieve the list from saved xml
+                {
+                    list = fileXml.Deserialize(file) as List<Question>;
+                }
+            }
+            catch (System.IO.FileNotFoundException)
             {
-                list = fileXml.Deserialize(file) as List<Question>;
+                Console.WriteLine("No saved tests found");
             }
             return list;
         }
