@@ -5,7 +5,6 @@ using System.Xml.Serialization;
 namespace QuizzMaker;
 class Program
 {
-    const string PATH = @"/Users/sofi/Documents/ListOfQuestions.xml";
     const double MAX_SCORE = 100.0;
 
     static void Main(string[] args)
@@ -14,74 +13,76 @@ class Program
         Random rnd = new Random();
 
         var questionsList = new List<Question>();
-        char createNewQuestion = 'Y';
-
         PrintIntro();
+        char createNewQuestion = PrintQuestionsChoise(); // chice to open existing or create new
 
-        while (createNewQuestion == 'Y')
+        if (createNewQuestion == 'Q')
         {
-            var question = new Question();
-            question.title = Question.GetQuestionTitle();
-            question.allAnswers = Question.getAllAnswers();
-            questionsList.Add(question);
-            createNewQuestion = PrintContinueChoises(); //user's desision: create another question||continue
-        }
+            while (createNewQuestion == 'Q')
+            {
+                var question = new Question();
+                question.title = Question.GetQuestionTitle();
+                question.allAnswers = Question.getAllAnswers();
+                questionsList.Add(question);
+                createNewQuestion = PrintContinueChoises(); //user's desision: create another question||continue
+            }
 
-        SaveListToExternalXml(PATH, xml, questionsList);
+            SaveListToExternalXml(xml, questionsList);
+            char startTest = PrintStartTestChoises(); //user's desision if to start test or exit
 
-        char test = PrintStartTestChoises(); //user's desision if to start test or exit
-
-        if (test != 'Y')
-        {
-            return;
+            if (startTest != 'Y')
+            {
+                return;
+            }
+            else
+            {
+                createNewQuestion = 'T';
+            }
         }
         else
         {
             PrintTestKnowledgeIntro();
             PrintPressAnyKeyToContinue();
-            RetrieveDataFromXml(PATH, xml, questionsList);
+            questionsList = RetrieveDataFromXml(xml, questionsList);
+
+            if(questionsList.Count < 1)
+            {
+                Console.WriteLine("No questions saved, restart the app and create new test");
+                Console.ReadKey();
+                return;
+            }
 
             double oneCorrectAnswer = 100 / questionsList.Count; //getting worth in % on corect answer to the question 
             double score = 0.0;
+            int questionNumberCounter = 1;
 
             while (questionsList.Count > 0)
             {
+                Console.Clear();
                 int randomQuestion = rnd.Next(questionsList.Count);
-                int questionNumber = 1;
 
-                Console.WriteLine("Question " + questionNumber + ":\n" + questionsList[randomQuestion].title);
-                Console.WriteLine("Enter the letter that is corresponding with correct answer:\n*side note: questions can have more than 1 correct answer, separate each answer with coma before submitting\n");
+                PrintQuestion(questionNumberCounter, questionsList[randomQuestion].title);
+                questionNumberCounter++;
 
                 var orderedAnswers = AnswersAddOrder(questionsList[randomQuestion].allAnswers);//create list of ordered answers
                 var correctAnswers = GetCorrectAnswersList(orderedAnswers);  // get correct answers to compare input
-                var cleanAnswers = CleanAnswers(orderedAnswers); // clean list from hints for printing
+                var cleanAnswersForPrint = CleanAnswers(orderedAnswers); // clean list from hints for printing
 
-                foreach (string item in orderedAnswers)
-                {
-                    Console.WriteLine(item);
-                }
-                Console.Write(">");
+                PrintAnswers(cleanAnswersForPrint);
 
-                string answer = (Console.ReadLine()).ToUpper(); // get input
+                string answer = (Console.ReadLine()).ToUpper(); // get answers
 
-                int answeredCorrectlyTimes = CheckUserAnswers(answer, cleanAnswers); //check if answer is in correct answers list, score/not score count
+                int answeredCorrectlyTimes = CheckUserAnswers(answer, correctAnswers);
+                //check if answer is in correct answers list, score/not score count
 
-                //analyze the answer
-                //ask to reenter if contains numbers, symbols, anything but letters and commas
+                questionsList.Remove(questionsList[randomQuestion]); //remove answered question from list of questions to display
 
-
-
-
-                questionNumber++;
-                questionsList.Remove(questionsList[randomQuestion]);
-                //if correct
                 score += oneCorrectAnswer * answeredCorrectlyTimes;
-                //else score stays the same
+
             }
-            Console.WriteLine($"All questions are completed, score: {score.ToString("P1")}");
+            PrintScore(score, MAX_SCORE);
             PrintPressAnyKeyToContinue();
             return;
-            //end , show score, ask if want to take the test again
         }
 
 

@@ -4,12 +4,9 @@ using System.Xml.Serialization;
 
 namespace QuizzMaker
 {
-	public class Logic
-	{
-
-
-
-
+    public class Logic
+    {
+        const string PATH = @"/Users/sofi/Documents/ListOfQuestions.xml";
 
         /// <summary>
         /// save datat to xml
@@ -17,9 +14,9 @@ namespace QuizzMaker
         /// <param name="path">pathe where file created on the local machine</param>
         /// <param name="fileXml"></param>
         /// <param name="list"></param>
-        public static void SaveListToExternalXml(string path, XmlSerializer fileXml, List<Question> list)
-		{
-            using (FileStream file = File.Create(path)) //write list of questions into the external file.xml
+        public static void SaveListToExternalXml(XmlSerializer fileXml, List<Question> list)
+        {
+            using (FileStream file = File.Create(PATH)) //write list of questions into the external file.xml
             {
                 fileXml.Serialize(file, list);
             }
@@ -31,12 +28,13 @@ namespace QuizzMaker
         /// <param name="path">path to the file</param>
         /// <param name="fileXml"></param>
         /// <param name="list"></param>
-        public static void RetrieveDataFromXml(string path, XmlSerializer fileXml, List<Question> list)
+        public static List<Question> RetrieveDataFromXml(XmlSerializer fileXml, List<Question> list)
         {
-            using (FileStream file = File.OpenRead(path)) // retrieve the list from saved xml
+            using (FileStream file = File.OpenRead(PATH)) // retrieve the list from saved xml
             {
                 list = fileXml.Deserialize(file) as List<Question>;
             }
+            return list;
         }
 
 
@@ -57,8 +55,15 @@ namespace QuizzMaker
             int i = 0;
             foreach (string answer in splittedAnswers)
             {
-                string ans = ch[i] + ". " + splittedAnswers[i].Trim();
-                outputOrderedAnswers.Add(ans);
+                if (answer.Length == 1 && answer.Contains(' '))
+                {
+                    continue;
+                }
+                else
+                {
+                    string ans = ch[i] + ". " + splittedAnswers[i].Trim();
+                    outputOrderedAnswers.Add(ans);
+                }
                 i++;
             }
             return outputOrderedAnswers;
@@ -70,19 +75,22 @@ namespace QuizzMaker
         /// </summary>
         /// <param name="answers"></param>
         /// <returns></returns>
-        public static List<string> GetCorrectAnswersList(List<string> answers)
+        public static List<char> GetCorrectAnswersList(List<string> answers)
         {
             List<string> rawAnswers = answers;
-            List<string> correctAnswers = new List<string>();
+            List<char> correct = new List<char>();
 
             foreach (string item in rawAnswers)
             {
                 if (item.Contains('*'))
                 {
-                    correctAnswers.Add(item);
+                    for(int i = 0; i < 2; i++)
+                    {
+                        correct.Add(item[i]);
+                    }
                 }
             }
-            return correctAnswers;
+            return correct;
         }
 
 
@@ -93,7 +101,7 @@ namespace QuizzMaker
         /// <returns></returns>
         public static List<string> CleanAnswers(List<string> answers)
         {
-            List<string> rawAnswers = new List<string> { "***string", "*str*", "*i", "..." };
+            List<string> rawAnswers = answers;
             List<string> cleanAnswers = new List<string>();
 
             foreach (string answer in rawAnswers)
@@ -114,17 +122,25 @@ namespace QuizzMaker
 
 
 
+        //method for answer input check
 
-        public static int CheckUserAnswers(string userAns, List<string> correctList)
+
+
+        /// <summary>
+        /// checks how many correct answers was given in the input
+        /// </summary>
+        /// <param name="userAns"></param>
+        /// <param name="correctList"></param>
+        /// <returns></returns>
+        public static int CheckUserAnswers(string userAns, List<char> correctList)
         {
             int correctAnswerCount = 0;
-            string[] userA = userAns.Split(',');
 
-            for(int i = 0; i < correctList.Count; i++)
+            for (int i = 0; i < correctList.Count; i++)
             {
-                for(int j = 0; j < userA.Length; j++)
+                for (int j = 0; j < userAns.Length; j++)
                 {
-                    if (correctList[i].Contains(userA[j]))
+                    if (correctList[i] == userAns[j])
                     {
                         correctAnswerCount++;
                     }
@@ -133,6 +149,8 @@ namespace QuizzMaker
 
             return correctAnswerCount;
         }
+
+
 
     }
 }
