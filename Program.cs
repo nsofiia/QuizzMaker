@@ -46,7 +46,7 @@ class Program
             PrintPressAnyKeyToContinue();
             questionsList = RetrieveDataFromXml(xml);
 
-            if(questionsList.Count < 1)
+            if (questionsList.Count < 1)
             {
                 Console.WriteLine("No questions saved, restart the app and create new test");
                 Console.ReadKey();
@@ -84,7 +84,7 @@ class Program
                 }
 
             }
-            PrintScore(score, MAX_SCORE);   
+            PrintScore(score, MAX_SCORE);
             PrintPressAnyKeyToContinue();
             return;
         }

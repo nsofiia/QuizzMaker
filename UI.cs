@@ -14,14 +14,14 @@ namespace QuizzMaker
 
         public static char PrintQuestionsChoise()
         {
-            Console.WriteLine("Create new quiz: Q\nLoad saved test: T\n");
-
             string validInput = "QT";
+            Console.WriteLine($"Create new quiz: {validInput[0]}\nLoad saved test: {validInput[1]}\n");
+
             char userAnswer = Char.ToUpper(Console.ReadKey().KeyChar);
 
             while(!validInput.Contains(userAnswer))
             {
-                Console.WriteLine("\nchoose Q or T to continue\n");
+                Console.WriteLine($"\nchoose {validInput[0]} or {validInput[1]} to continue\n");
                 userAnswer = Char.ToUpper(Console.ReadKey().KeyChar);
             }
             return userAnswer;
