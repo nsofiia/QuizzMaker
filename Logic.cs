@@ -138,17 +138,31 @@ namespace QuizzMaker
         {
             int correctAnswerCount = 0;
 
-            for (int i = 0; i < correctList.Count; i++)
+            List<char> corrAns = new List<char>();
+
+            foreach(char c in userAns) //removing everything but actual answer letters 
             {
-                for (int j = 0; j < userAns.Length; j++)
+                if (Char.IsLetter(c))
                 {
-                    if (correctList[i] == userAns[j])
+                    corrAns.Add(c);
+                }
+            }
+
+            for (int i = 0; i < correctList.Count; i++) //comparing letters in the user answer with letters in the correct list
+            {
+                for (int j = 0; j < corrAns.Count; j++)
+                {
+                    if (correctList[i] == corrAns[j])
                     {
                         correctAnswerCount++;
                     }
                 }
             }
-            correctAnswerCount = correctAnswerCount / correctList.Count;
+
+            if(correctAnswerCount > 1) //untill multiple answers support is added
+            {
+                correctAnswerCount = 1;
+            }
 
             return correctAnswerCount;
         }
