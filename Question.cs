@@ -5,13 +5,8 @@ namespace QuizzMaker
 {
     public class Question
     {
-        public string title;
-        public string allAnswers;
-
-
-
-
-        
+        public string question;
+        public string answers;
 
     }
 }

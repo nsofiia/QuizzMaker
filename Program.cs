@@ -20,10 +20,10 @@ class Program
         {
             while (createNewQuestion == 'Q')
             {
-                var question = new Question();
-                question.title = GetQuestionTitle();
-                question.allAnswers = getAllAnswers();
-                questionsList.Add(question);
+                var newQuestion = new Question();
+                newQuestion.question = GetQuestionTitle();
+                newQuestion.answers = getAllAnswers();
+                questionsList.Add(newQuestion);
                 createNewQuestion = PrintContinueChoises(); //user's desision: create another question||continue
             }
 
@@ -61,10 +61,10 @@ class Program
                 Console.Clear();
                 int randomQuestion = rnd.Next(questionsList.Count);
 
-                PrintQuestion(questionNumberCounter, questionsList[randomQuestion].title);
+                PrintQuestion(questionNumberCounter, questionsList[randomQuestion].question);
                 questionNumberCounter++;
 
-                var orderedAnswers = AnswersAddOrder(questionsList[randomQuestion].allAnswers);//create list of ordered answers
+                var orderedAnswers = AnswersAddOrder(questionsList[randomQuestion].answers);//create list of ordered answers
                 var correctAnswers = GetCorrectAnswersList(orderedAnswers);  // get correct answers to compare input
                 var cleanAnswersForPrint = CleanAnswers(orderedAnswers); // clean list from hints for printing
 
