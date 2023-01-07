@@ -10,6 +10,7 @@ class Program
     static void Main(string[] args)
     {
         XmlSerializer xml = new XmlSerializer(typeof(List<Question>));
+
         Random rnd = new Random();
 
         var questionsList = new List<Question>();
@@ -43,7 +44,7 @@ class Program
         {
             PrintTestKnowledgeIntro();
             PrintPressAnyKeyToContinue();
-            questionsList = RetrieveDataFromXml(xml, questionsList);
+            questionsList = RetrieveDataFromXml(xmls);
 
             if(questionsList.Count < 1)
             {

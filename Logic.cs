@@ -7,6 +7,8 @@ namespace QuizzMaker
     public class Logic
     {
         const string PATH = @"/Users/sofi/Documents/ListOfQuestions.xml";
+        const string ch = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
 
         /// <summary>
         /// save datat to xml
@@ -28,9 +30,12 @@ namespace QuizzMaker
         /// <param name="path">path to the file</param>
         /// <param name="fileXml"></param>
         /// <param name="list"></param>
-        public static List<Question> RetrieveDataFromXml(XmlSerializer fileXml, List<Question> list)
+        public static List<Question> RetrieveDataFromXml(XmlSerializer fileXml)
         {
-            try {
+            List<Question> list = new List<Question>();
+
+            try
+            {
                 using (FileStream file = File.OpenRead(PATH)) // retrieve the list from saved xml
                 {
                     list = fileXml.Deserialize(file) as List<Question>;
@@ -40,6 +45,7 @@ namespace QuizzMaker
             {
                 Console.WriteLine("No saved tests found");
             }
+
             return list;
         }
 
@@ -55,13 +61,12 @@ namespace QuizzMaker
         {
             string allA = allAns;
             string[] splittedAnswers = allA.Split(',');
-            string ch = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; //order is alphabetical
-            List<string> outputOrderedAnswers = new List<string>()
-;
+            List<string> outputOrderedAnswers = new List<string>();
+
             int i = 0;
             foreach (string answer in splittedAnswers)
             {
-                if (answer.Length == 1 && answer.Contains(' '))
+                if (String.IsNullOrWhiteSpace(answer))
                 {
                     continue;
                 }
@@ -90,10 +95,7 @@ namespace QuizzMaker
             {
                 if (item.Contains('*'))
                 {
-                    for(int i = 0; i < 2; i++)
-                    {
-                        correct.Add(item[i]);
-                    }
+                    correct.Add(item[0]);
                 }
             }
             return correct;
@@ -107,10 +109,9 @@ namespace QuizzMaker
         /// <returns></returns>
         public static List<string> CleanAnswers(List<string> answers)
         {
-            List<string> rawAnswers = answers;
             List<string> cleanAnswers = new List<string>();
 
-            foreach (string answer in rawAnswers)
+            foreach (string answer in answers)
             {
                 if (answer.Contains('*'))
                 {
