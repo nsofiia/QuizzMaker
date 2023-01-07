@@ -152,13 +152,10 @@ namespace QuizzMaker
                     }
                 }
             }
-            if(correctAnswerCount > 1)   //untill I come up with multiple answers suppport
-            {
-                correctAnswerCount = 1;
-            }
+            correctAnswerCount = correctAnswerCount / correctList.Count;
+
             return correctAnswerCount;
         }
-
 
 
     }

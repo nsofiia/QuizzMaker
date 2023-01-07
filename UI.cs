@@ -47,6 +47,42 @@ namespace QuizzMaker
             Console.WriteLine("\nEnter at least 2 answers, separated with coma; add at least 1 correct answer, indicated with asteriks (*)\n");
         }
 
+
+        /// <summary>
+        /// get title string
+        /// </summary>
+        /// <returns></returns>
+        public static string GetQuestionTitle()
+        {
+            PrintEnterTitleMessage();
+            string qTitle = Console.ReadLine();
+
+            while (!qTitle.Contains('?') || qTitle.Length < 6)
+            {
+                PrintErrorTitleMessage();
+                qTitle = Console.ReadLine();
+            }
+            return qTitle;
+        }
+
+
+        /// <summary>
+        /// get all answers
+        /// </summary>
+        /// <returns></returns>
+        public static string getAllAnswers()
+        {
+            PrintEnterAnswersMessage();
+            string answers = Console.ReadLine();
+
+            while (!answers.Contains(',') || !answers.Contains(','))
+            {
+                PrintErrorAnswersMessage();
+                answers = Console.ReadLine();
+            }
+            return answers;
+        }
+
         public static char PrintContinueChoises()
         {
             Console.WriteLine("\nAdd another question? Q - to add another, any other key to continue\n");

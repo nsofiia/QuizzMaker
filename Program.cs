@@ -21,8 +21,8 @@ class Program
             while (createNewQuestion == 'Q')
             {
                 var question = new Question();
-                question.title = Question.GetQuestionTitle();
-                question.allAnswers = Question.getAllAnswers();
+                question.title = GetQuestionTitle();
+                question.allAnswers = getAllAnswers();
                 questionsList.Add(question);
                 createNewQuestion = PrintContinueChoises(); //user's desision: create another question||continue
             }
@@ -77,7 +77,7 @@ class Program
 
                 questionsList.Remove(questionsList[randomQuestion]); //remove answered question from list of questions to display
 
-                score += oneCorrectAnswer;
+                score = score + (oneCorrectAnswer * answeredCorrectlyTimes);
 
             }
             PrintScore(score, MAX_SCORE);   
