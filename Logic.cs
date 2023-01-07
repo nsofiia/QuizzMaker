@@ -113,15 +113,10 @@ namespace QuizzMaker
 
             foreach (string answer in answers)
             {
-                if (answer.Contains('*'))
-                {
-                    string clean = answer.Trim('*');
-                    cleanAnswers.Add(clean);
-                }
-                else
-                {
-                    cleanAnswers.Add(answer);
-                }
+
+                string clean = answer.Trim('*');
+                cleanAnswers.Add(clean);
+
             }
             return cleanAnswers;
         }
