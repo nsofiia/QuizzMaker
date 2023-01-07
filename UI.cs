@@ -75,7 +75,7 @@ namespace QuizzMaker
             PrintEnterAnswersMessage();
             string answers = Console.ReadLine();
 
-            while (!answers.Contains(',') || !answers.Contains(','))
+            while (!answers.Contains(',') || !answers.Contains('*'))
             {
                 PrintErrorAnswersMessage();
                 answers = Console.ReadLine();
