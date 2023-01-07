@@ -44,7 +44,7 @@ class Program
         {
             PrintTestKnowledgeIntro();
             PrintPressAnyKeyToContinue();
-            questionsList = RetrieveDataFromXml(xmls);
+            questionsList = RetrieveDataFromXml(xml);
 
             if(questionsList.Count < 1)
             {
@@ -73,12 +73,15 @@ class Program
 
                 string answer = (Console.ReadLine()).ToUpper(); // get answers
 
-                int answeredCorrectlyTimes = CheckUserAnswers(answer, correctAnswers);
+                bool answeredCorrectly = CheckUserAnswers(answer, correctAnswers);
                 //check if answer is in correct answers list, score/not score count
 
                 questionsList.Remove(questionsList[randomQuestion]); //remove answered question from list of questions to display
 
-                score = score + (oneCorrectAnswer * answeredCorrectlyTimes);
+                if (answeredCorrectly)
+                {
+                    score += oneCorrectAnswer;
+                }
 
             }
             PrintScore(score, MAX_SCORE);   

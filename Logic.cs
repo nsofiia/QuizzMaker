@@ -134,13 +134,12 @@ namespace QuizzMaker
         /// <param name="userAns"></param>
         /// <param name="correctList"></param>
         /// <returns></returns>
-        public static int CheckUserAnswers(string userAns, List<char> correctList)
+        public static bool CheckUserAnswers(string userAns, List<char> correctList)
         {
-            int correctAnswerCount = 0;
-
+            bool answeredCorrect = false;
             List<char> corrAns = new List<char>();
 
-            foreach(char c in userAns) //removing everything but actual answer letters 
+            foreach (char c in userAns) //removing everything but actual answer letters in user's input
             {
                 if (Char.IsLetter(c))
                 {
@@ -148,23 +147,17 @@ namespace QuizzMaker
                 }
             }
 
+            string corrAnswers = String.Join("",corrAns.ToArray());
+
             for (int i = 0; i < correctList.Count; i++) //comparing letters in the user answer with letters in the correct list
             {
-                for (int j = 0; j < corrAns.Count; j++)
+                if (corrAnswers.Contains(correctList[i]))
                 {
-                    if (correctList[i] == corrAns[j])
-                    {
-                        correctAnswerCount++;
-                    }
+                    answeredCorrect = true;
                 }
             }
 
-            if(correctAnswerCount > 1) //untill multiple answers support is added
-            {
-                correctAnswerCount = 1;
-            }
-
-            return correctAnswerCount;
+            return answeredCorrect;
         }
 
 
