@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Xml.Serialization;
 
 namespace QuizzMaker
@@ -8,7 +7,7 @@ namespace QuizzMaker
     {
         const string PATH = @"/Users/sofi/Documents/ListOfQuestions.xml";
         const string ch = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
+        static readonly XmlSerializer xml = new XmlSerializer(typeof(List<Question>));
 
         /// <summary>
         /// save datat to xml
@@ -16,11 +15,11 @@ namespace QuizzMaker
         /// <param name="path">pathe where file created on the local machine</param>
         /// <param name="fileXml"></param>
         /// <param name="list"></param>
-        public static void SaveListToExternalXml(XmlSerializer fileXml, List<Question> list)
+        public static void SaveListToExternalXml(List<Question> list)
         {
             using (FileStream file = File.Create(PATH)) //write list of questions into the external file.xml
             {
-                fileXml.Serialize(file, list);
+                xml.Serialize(file, list);
             }
         }
 
@@ -30,7 +29,7 @@ namespace QuizzMaker
         /// <param name="path">path to the file</param>
         /// <param name="fileXml"></param>
         /// <param name="list"></param>
-        public static List<Question> RetrieveDataFromXml(XmlSerializer fileXml)
+        public static List<Question> RetrieveDataFromXml()
         {
             List<Question> list = new List<Question>();
 
@@ -38,7 +37,7 @@ namespace QuizzMaker
             {
                 using (FileStream file = File.OpenRead(PATH)) // retrieve the list from saved xml
                 {
-                    list = fileXml.Deserialize(file) as List<Question>;
+                    list = xml.Deserialize(file) as List<Question>;
                 }
             }
             catch (System.IO.FileNotFoundException)
