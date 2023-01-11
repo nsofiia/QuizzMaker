@@ -56,15 +56,24 @@ namespace QuizzMaker
         /// </summary>
         /// <param name="allAs"></param>
         /// <returns></returns>
-        public static List<string> AnswersAddOrder(List<string> allAns)
+        public static List<string> AnswersAddOrder(string allAns)
         {
+            string allA = allAns;
+            string[] splittedAnswers = allA.Split(',');
             List<string> outputOrderedAnswers = new List<string>();
 
             int i = 0;
-            foreach (string answer in allAns)
+            foreach (string answer in splittedAnswers)
             {
-                    string ans = ch[i] + ". " + allAns[i].Trim();
+                if (String.IsNullOrWhiteSpace(answer))
+                {
+                    continue;
+                }
+                else
+                {
+                    string ans = ch[i] + ". " + splittedAnswers[i].Trim();
                     outputOrderedAnswers.Add(ans);
+                }
                 i++;
             }
             return outputOrderedAnswers;

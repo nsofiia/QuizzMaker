@@ -19,7 +19,7 @@ namespace QuizzMaker
 
             char userAnswer = Char.ToUpper(Console.ReadKey().KeyChar);
 
-            while (!validInput.Contains(userAnswer))
+            while(!validInput.Contains(userAnswer))
             {
                 Console.WriteLine($"\nchoose {validInput[0]} or {validInput[1]} to continue\n");
                 userAnswer = Char.ToUpper(Console.ReadKey().KeyChar);
@@ -39,7 +39,7 @@ namespace QuizzMaker
 
         public static void PrintEnterAnswersMessage()
         {
-            Console.WriteLine("\nEnter 1 answer at a time and press Enter. Add an asterisk symbol (*) to indicate the correct answers\n");
+            Console.WriteLine("\nEnter at least 2 answers, each answer separated with coma. Add an asterisk symbol (*) to indicate the correct answers\n");
         }
 
         public static void PrintErrorAnswersMessage()
@@ -70,41 +70,17 @@ namespace QuizzMaker
         /// get all answers
         /// </summary>
         /// <returns></returns>
-        public static List<string> getAllAnswers()
+        public static string getAllAnswers()
         {
             PrintEnterAnswersMessage();
-            List<string> AnswerList = new List<string>();
-            char oneMoreAnswer = 'Y';
-            while (oneMoreAnswer == 'Y')
-            {
-                string entry = Console.ReadLine();
+            string answers = Console.ReadLine();
 
-                while (string.IsNullOrEmpty(entry) || string.IsNullOrWhiteSpace(entry))
-                {
-                    Console.WriteLine("Answer can not be empty\n");
-                    entry = Console.ReadLine();
-                }
-                if (!entry.Contains('*'))
-                {
-                    Console.WriteLine("\nnot marked as correct answer, would you like to go back? Press B to rewrite the answer, press any other key to continue next\n");
-                    char saveOrnot = Char.ToUpper(Console.ReadKey().KeyChar);
-                    if (saveOrnot == 'B')
-                    {
-                        Console.WriteLine("Enter answer again:\n");
-                        entry = Console.ReadLine();
-                    }
-                    Console.WriteLine("Saved answer\n");
-                }
-                AnswerList.Add(entry);
-                Console.WriteLine("Add one more? y -to add one more answer, any other key to continue\n");
-                oneMoreAnswer = Char.ToUpper(Console.ReadKey().KeyChar);
-            }
-            if(oneMoreAnswer != 'Y')
+            while (!answers.Contains(',') || !answers.Contains('*'))
             {
-                Console.WriteLine("ALL answers recorded!\n");
+                PrintErrorAnswersMessage();
+                answers = Console.ReadLine();
             }
-
-            return AnswerList;
+            return answers;
         }
 
         public static char PrintContinueChoises()
@@ -159,7 +135,7 @@ namespace QuizzMaker
         public static void PrintScore(double presentScore, double maxScore)
         {
             Console.WriteLine($"All questions are completed with score: {presentScore}% out of {maxScore}%");
-            if (presentScore < 85)
+            if(presentScore < 85)
             {
                 Console.WriteLine("Didn't pass, try taking the test tomorrow");
             }
