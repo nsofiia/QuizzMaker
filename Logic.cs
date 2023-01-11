@@ -56,24 +56,15 @@ namespace QuizzMaker
         /// </summary>
         /// <param name="allAs"></param>
         /// <returns></returns>
-        public static List<string> AnswersAddOrder(string allAns)
+        public static List<string> AnswersAddOrder(List<string> allAns)
         {
-            string allA = allAns;
-            string[] splittedAnswers = allA.Split(',');
             List<string> outputOrderedAnswers = new List<string>();
 
             int i = 0;
-            foreach (string answer in splittedAnswers)
+            foreach (string answer in allAns)
             {
-                if (String.IsNullOrWhiteSpace(answer))
-                {
-                    continue;
-                }
-                else
-                {
-                    string ans = ch[i] + ". " + splittedAnswers[i].Trim();
-                    outputOrderedAnswers.Add(ans);
-                }
+                string ans = ch[i] + ". " + allAns[i].Trim();
+                outputOrderedAnswers.Add(ans);
                 i++;
             }
             return outputOrderedAnswers;
@@ -136,21 +127,10 @@ namespace QuizzMaker
         public static bool CheckUserAnswers(string userAns, List<char> correctList)
         {
             bool answeredCorrect = false;
-            List<char> corrAns = new List<char>();
-
-            foreach (char c in userAns) //removing everything but actual answer letters in user's input
-            {
-                if (Char.IsLetter(c))
-                {
-                    corrAns.Add(c);
-                }
-            }
-
-            string corrAnswers = String.Join("",corrAns.ToArray());
 
             for (int i = 0; i < correctList.Count; i++) //comparing letters in the user answer with letters in the correct list
             {
-                if (corrAnswers.Contains(correctList[i]))
+                if (userAns.Contains(correctList[i]))
                 {
                     answeredCorrect = true;
                 }
