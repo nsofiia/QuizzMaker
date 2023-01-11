@@ -6,7 +6,7 @@ namespace QuizzMaker
     public class Question
     {
         public string question;
-        public string answers;
+        public List<string> answers;
 
     }
 }
