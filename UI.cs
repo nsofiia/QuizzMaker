@@ -2,9 +2,7 @@
 namespace QuizzMaker
 {
     public class UI
-    {
-        const double PASSING_SCORE = 85.0;
-
+    {       
         public static void PrintIntro()
         {
             Console.WriteLine("Test knowledge!\n");
@@ -160,7 +158,7 @@ namespace QuizzMaker
 
         public static void PrintPassFail(double presentScore)
         {
-            if (presentScore >= PASSING_SCORE)
+            if (presentScore >= Program.PASSING_SCORE)
             {
                 Console.WriteLine("You passed!");
             }

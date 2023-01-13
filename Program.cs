@@ -4,8 +4,8 @@ using static QuizzMaker.Logic;
 namespace QuizzMaker;
 class Program
 {
-    const double MAX_SCORE = 100.0;
-    const double PASSING_SCORE = 85.0;
+    public const double MAX_SCORE = 100.0;
+    public const double PASSING_SCORE = 85.0;
 
     static void Main(string[] args)
     {
@@ -77,7 +77,7 @@ class Program
 
         }
         PrintScore(score, MAX_SCORE);
-        PrintPassFail(score, PASSING_SCORE);
+        PrintPassFail(score);
         PrintPressAnyKeyToContinue();
         return;
     }
