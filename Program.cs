@@ -5,6 +5,7 @@ namespace QuizzMaker;
 class Program
 {
     const double MAX_SCORE = 100.0;
+    const double PASSING_SCORE = 85.0;
 
     static void Main(string[] args)
     {
@@ -12,7 +13,7 @@ class Program
 
         var questionsList = new List<Question>();
         PrintIntro();
-        char createNewQuestion = PrintQuestionsChoise(); // chice to open existing or create new
+        char createNewQuestion = PrintLoadOrCreate(); // chice to open existing or create new
 
         if (createNewQuestion == 'Q')
         {
@@ -56,7 +57,7 @@ class Program
             PrintQuestion(questionNumberCounter, questionsList[randomQuestion].question);
             questionNumberCounter++;
 
-            var orderedAnswers = AnswersAddOrder(questionsList[randomQuestion].answers);//create list of ordered answers
+            var orderedAnswers = OrderAnswersAndKeys(questionsList[randomQuestion].answers);//create list of ordered answers
             var correctAnswers = GetCorrectAnswersList(orderedAnswers);  // get correct answers to compare input
             var cleanAnswersForPrint = CleanAnswers(orderedAnswers); // clean list from hints for printing
 
@@ -76,6 +77,7 @@ class Program
 
         }
         PrintScore(score, MAX_SCORE);
+        PrintPassFail(score, PASSING_SCORE);
         PrintPressAnyKeyToContinue();
         return;
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using static QuizzMaker.UI;
 using System.Xml.Serialization;
 
 namespace QuizzMaker
@@ -6,8 +7,51 @@ namespace QuizzMaker
     public class Logic
     {
         const string PATH = @"/Users/sofi/Documents/ListOfQuestions.xml";
-        const string ch = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const string ANSWERS_KEYS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; //used for orderly answers display and as a key to each answer frokm user's input 
         static readonly XmlSerializer xml = new XmlSerializer(typeof(List<Question>));
+
+
+
+        /// <summary>
+        /// get all answers
+        /// </summary>
+        /// <returns></returns>
+        public static List<string> getAllAnswers()
+        {
+            PrintEnterAnswersMessage();
+            List<string> AnswerList = new List<string>();
+            char oneMoreAnswer = 'Y';
+            while (oneMoreAnswer == 'Y')
+            {
+                string entry = Console.ReadLine();
+
+                while (string.IsNullOrEmpty(entry) || string.IsNullOrWhiteSpace(entry))
+                {
+                    PrintEmptyError();
+                    entry = Console.ReadLine();
+                }
+                if (!entry.Contains('*'))
+                {
+                    PrintAnswerIsNotMarkedError();
+                    char saveOrnot = Char.ToUpper(Console.ReadKey().KeyChar);
+                    if (saveOrnot == 'B')
+                    {
+                        PrintAnswerSavedStatus(saveOrnot);
+                        entry = Console.ReadLine();
+                    }
+                    PrintAnswerSavedStatus(saveOrnot);
+                }
+                AnswerList.Add(entry);
+                PrintAddAnotherAnswer();
+                oneMoreAnswer = Char.ToUpper(Console.ReadKey().KeyChar);
+            }
+            if (oneMoreAnswer != 'Y')
+            {
+                PrintAllAnswerSavedMessage();
+            }
+            return AnswerList;
+        }
+
 
         /// <summary>
         /// save datat to xml
@@ -56,14 +100,14 @@ namespace QuizzMaker
         /// </summary>
         /// <param name="allAs"></param>
         /// <returns></returns>
-        public static List<string> AnswersAddOrder(List<string> allAns)
+        public static List<string> OrderAnswersAndKeys(List<string> allAns)
         {
             List<string> outputOrderedAnswers = new List<string>();
 
             int i = 0;
             foreach (string answer in allAns)
             {
-                string ans = ch[i] + ". " + allAns[i].Trim();
+                string ans = ANSWERS_KEYS[i] + ". " + allAns[i].Trim();
                 outputOrderedAnswers.Add(ans);
                 i++;
             }
@@ -93,7 +137,7 @@ namespace QuizzMaker
 
 
         /// <summary>
-        /// removing all '*' from list of strings
+        ///used for display of answers to user, removing hints
         /// </summary>
         /// <param name="answers"></param>
         /// <returns></returns>
@@ -104,17 +148,12 @@ namespace QuizzMaker
             foreach (string answer in answers)
             {
 
-                string clean = answer.Trim('*');
-                cleanAnswers.Add(clean);
+                string cleaned = answer.Trim('*');
+                cleanAnswers.Add(cleaned);
 
             }
             return cleanAnswers;
         }
-
-
-
-
-        //method for answer input check
 
 
 
@@ -138,6 +177,7 @@ namespace QuizzMaker
 
             return answeredCorrect;
         }
+
 
 
     }
