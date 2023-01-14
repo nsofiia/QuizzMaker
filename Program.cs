@@ -2,83 +2,88 @@
 using static QuizzMaker.Logic;
 
 namespace QuizzMaker;
+
 class Program
 {
-    public const double MAX_SCORE = 100.0;
+    const double MAX_SCORE = 100.0;
     public const double PASSING_SCORE = 85.0;
+    public const string ANSWERS_KEYS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; //used for orderly answers display and as a key to each answer frokm user's input 
 
     static void Main(string[] args)
     {
         Random rnd = new Random();
-
-        var questionsList = new List<Question>();
         PrintIntro();
-        char createNewQuestion = PrintLoadOrCreate(); // chice to open existing or create new
+        char userChoice = PrintLoadFromStorageGetAnswer(); // chice to open existing saved file in local storage or create new file
+        var questionsList = new List<Question>();
 
-        if (createNewQuestion == 'Q')
+        if (userChoice == 'Q')// Q - create new Test; T - load existing file from local 
         {
-            while (createNewQuestion == 'Q')
+            while (userChoice == 'Q')
             {
                 var newQuestion = new Question();
                 newQuestion.question = GetQuestionTitle();
-                newQuestion.answers = getAllAnswers();
+                newQuestion.answers = GetAllAnswers();
                 questionsList.Add(newQuestion);
-                createNewQuestion = PrintContinueChoises(); //user's desision: create another question||continue
+                userChoice = PrintContinueChoises(); //user's desision: create another question||continue
             }
 
             SaveListToExternalXml(questionsList);
-            char startTest = PrintStartTestChoises(); //user's desision if to start test or exit
+            userChoice = PrintStartTestChoises(); //user's desision if to start test or exit
 
-            if (startTest != 'Y')
+            if (userChoice != 'Y')
             {
                 return;
             }
         }
-        PrintTestKnowledgeIntro();
-        PrintPressAnyKeyToContinue();
+
         questionsList = RetrieveDataFromXml();
 
-        if (questionsList.Count < 1)
+        if (questionsList.Count > 0)
         {
-            Console.WriteLine("No questions saved, restart the app and create new test");
-            Console.ReadKey();
-            return;
-        }
+            PrintTestKnowledgeIntro();
+            PrintPressAnyKeyToContinue();
+            double correctAnswerScore = 100 / questionsList.Count;
+            double score = 0.0;
+            int questionNumberCounter = 1;
 
-        double oneCorrectAnswer = 100 / questionsList.Count; //getting worth in % on corect answer to the question 
-        double score = 0.0;
-        int questionNumberCounter = 1;
-
-        while (questionsList.Count > 0)
-        {
-            Console.Clear();
-            int randomQuestion = rnd.Next(questionsList.Count);
-
-            PrintQuestion(questionNumberCounter, questionsList[randomQuestion].question);
-            questionNumberCounter++;
-
-            var orderedAnswers = OrderAnswersAndKeys(questionsList[randomQuestion].answers);//create list of ordered answers
-            var correctAnswers = GetCorrectAnswersList(orderedAnswers);  // get correct answers to compare input
-            var cleanAnswersForPrint = CleanAnswers(orderedAnswers); // clean list from hints for printing
-
-            PrintAnswers(cleanAnswersForPrint);
-
-            string answer = (Console.ReadLine()).ToUpper(); // get answers
-
-            bool answeredCorrectly = CheckUserAnswers(answer, correctAnswers);
-            //check if answer is in correct answers list, score/not score count
-
-            questionsList.Remove(questionsList[randomQuestion]); //remove answered question from list of questions to display
-
-            if (answeredCorrectly)
+            while (questionsList.Count > 0)
             {
-                score += oneCorrectAnswer;
+                Console.Clear();
+                int selectedRandomQuestion = rnd.Next(questionsList.Count);
+
+                PrintQuestion(questionNumberCounter, questionsList[selectedRandomQuestion].question);
+                questionNumberCounter++;
+
+                var orderedAnswers = OrderAnswersAndKeys(questionsList[selectedRandomQuestion].answers);//create list of ordered answers
+                var correctAnswers = GetCorrectAnswersList(orderedAnswers);  // get correct answers to compare input
+                var cleanAnswersForPrint = CleanAnswers(orderedAnswers); // clean list from hints for printing
+
+                PrintAnswers(cleanAnswersForPrint);
+
+                string answer = UserEntryValidation().ToUpper(); // get answers for this question
+
+                bool answeredCorrectly = CheckUserAnswers(answer, correctAnswers);
+                //check if answer is in correct answers list, score/not score count
+
+                if (answeredCorrectly)
+                {
+                    score += correctAnswerScore;
+                }
+
+                questionsList.Remove(questionsList[selectedRandomQuestion]);
+                //remove answered question from list to display
+
             }
 
+            PrintScore(score, MAX_SCORE);
+            PrintPassFail(score);
+            Console.ReadKey();
         }
-        PrintScore(score, MAX_SCORE);
-        PrintPassFail(score);
-        PrintPressAnyKeyToContinue();
+        else
+        {
+            NoFileMessage();
+        }
+
         return;
     }
 }

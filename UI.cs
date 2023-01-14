@@ -9,7 +9,7 @@ namespace QuizzMaker
         }
 
 
-        public static char PrintLoadOrCreate()
+        public static char PrintLoadFromStorageGetAnswer()
         {
             string validInput = "QT";
             Console.WriteLine($"Create new quiz: {validInput[0]}\nLoad saved test: {validInput[1]}\n");
@@ -38,7 +38,7 @@ namespace QuizzMaker
 
         public static void PrintEnterAnswersMessage()
         {
-            Console.WriteLine("\nEnter 1 answer at a time and press Enter. Add an asterisk symbol (*) to indicate the correct answers\n");
+            Console.WriteLine("\nEnter all answers, separated with coma (,). Enter asterisk symbol (*) after each correct answer >\n");
         }
 
         public static void PrintErrorAnswersMessage()
@@ -100,9 +100,9 @@ namespace QuizzMaker
 
         }
 
-        public static void PrintAnswerIsNotMarkedError()
+        public static void PrintAnswerError()
         {
-            Console.WriteLine("\nnot marked as correct answer, would you like to go back? Press B to rewrite the answer, press any other key to save and continue\n");
+            Console.WriteLine("\nmust have at least 2 answers, must have at least 1 correct answer\n");
         }
 
         public static char PrintContinueChoises()
@@ -115,7 +115,7 @@ namespace QuizzMaker
 
         public static char PrintStartTestChoises()
         {
-            Console.WriteLine("\nReady to test your knowledge? \ny - start the test; \nany other key to save and exit \n");
+            Console.WriteLine("\nReady to test your knowledge? \nY - start the test; \nany other key to save and exit \n");
             char test = Char.ToUpper(Console.ReadKey().KeyChar);
             return test;
         }
@@ -124,7 +124,7 @@ namespace QuizzMaker
         public static void PrintTestKnowledgeIntro()
         {
             Console.Clear();
-            Console.WriteLine("Intro:\nFor each randomly selected question you will be presented with a list of answers. \nEnter all the letters that are corresponding with correct answers.\n");
+            Console.WriteLine("Intro:\nFor each randomly selected question you will be presented with a list of answers.Enter all the letters that are corresponding with correct answers to get a score.\nPass or Fail will be displayed at the end, when total score is calculated.\n");
         }
 
 
@@ -173,7 +173,16 @@ namespace QuizzMaker
 
         public static void PrintScore(double presentScore, double maxScore)
         {
+            Console.Clear();
             Console.WriteLine($"All questions are completed with score: {presentScore}% out of {maxScore}%");
+        }
+
+
+        public static void NoFileMessage()
+        {
+            Console.Clear();
+            Console.WriteLine("No questions found, restart to create a new test"); //is it possible to jump to the start?
+            Console.ReadKey();
         }
 
     }

@@ -7,47 +7,47 @@ namespace QuizzMaker
     public class Logic
     {
         const string PATH = @"/Users/sofi/Documents/ListOfQuestions.xml";
-        const string ANSWERS_KEYS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; //used for orderly answers display and as a key to each answer frokm user's input 
         static readonly XmlSerializer xml = new XmlSerializer(typeof(List<Question>));
 
+
+        public static string UserEntryValidation()
+        {
+            string entry = Console.ReadLine();
+
+            while (string.IsNullOrEmpty(entry) || string.IsNullOrWhiteSpace(entry))
+            {
+                PrintEmptyError();
+                entry = Console.ReadLine();
+            }
+            return entry;
+        }
 
 
         /// <summary>
         /// get all answers
         /// </summary>
         /// <returns></returns>
-        public static List<string> getAllAnswers()
+        public static List<string> GetAllAnswers()
         {
             PrintEnterAnswersMessage();
-            List<string> AnswerList = new List<string>();
-            char oneMoreAnswer = 'Y';
-            while (oneMoreAnswer == 'Y')
-            {
-                string entry = Console.ReadLine();
+            string entry = UserEntryValidation();
 
-                while (string.IsNullOrEmpty(entry) || string.IsNullOrWhiteSpace(entry))
-                {
-                    PrintEmptyError();
-                    entry = Console.ReadLine();
-                }
-                if (!entry.Contains('*'))
-                {
-                    PrintAnswerIsNotMarkedError();
-                    char saveOrnot = Char.ToUpper(Console.ReadKey().KeyChar);
-                    if (saveOrnot == 'B')
-                    {
-                        PrintAnswerSavedStatus(saveOrnot);
-                        entry = Console.ReadLine();
-                    }
-                    PrintAnswerSavedStatus(saveOrnot);
-                }
-                AnswerList.Add(entry);
-                PrintAddAnotherAnswer();
-                oneMoreAnswer = Char.ToUpper(Console.ReadKey().KeyChar);
-            }
-            if (oneMoreAnswer != 'Y')
+            while (!entry.Contains('*') || !entry.Contains(','))
             {
-                PrintAllAnswerSavedMessage();
+                PrintAnswerError();
+                entry = UserEntryValidation();
+            }
+
+            List<string> AnswerList = new List<string>();
+            string[] arrayOfAnswers = entry.Split(',');
+
+            foreach (string answer in arrayOfAnswers)
+            {
+                if (string.IsNullOrEmpty(answer) || string.IsNullOrWhiteSpace(answer))
+                {
+                    continue;
+                }
+                AnswerList.Add(answer);
             }
             return AnswerList;
         }
@@ -61,10 +61,18 @@ namespace QuizzMaker
         /// <param name="list"></param>
         public static void SaveListToExternalXml(List<Question> list)
         {
-            using (FileStream file = File.Create(PATH)) //write list of questions into the external file.xml
+            try
             {
-                xml.Serialize(file, list);
+                using (FileStream file = File.Create(PATH)) //write list of questions into the external file.xml
+                {
+                    xml.Serialize(file, list);
+                }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
         }
 
         /// <summary>
@@ -84,11 +92,10 @@ namespace QuizzMaker
                     list = xml.Deserialize(file) as List<Question>;
                 }
             }
-            catch (System.IO.FileNotFoundException)
+            catch (Exception e)
             {
-                Console.WriteLine("No saved tests found");
+                Console.WriteLine(e.Message);
             }
-
             return list;
         }
 
@@ -102,16 +109,16 @@ namespace QuizzMaker
         /// <returns></returns>
         public static List<string> OrderAnswersAndKeys(List<string> allAns)
         {
-            List<string> outputOrderedAnswers = new List<string>();
+            List<string> orderedAnswersList = new List<string>();
 
             int i = 0;
             foreach (string answer in allAns)
             {
-                string ans = ANSWERS_KEYS[i] + ". " + allAns[i].Trim();
-                outputOrderedAnswers.Add(ans);
+                string answerAndKey = Program.ANSWERS_KEYS[i] + ". " + allAns[i].Trim();
+                orderedAnswersList.Add(answerAndKey);
                 i++;
             }
-            return outputOrderedAnswers;
+            return orderedAnswersList;
         }
 
 
@@ -122,17 +129,16 @@ namespace QuizzMaker
         /// <returns></returns>
         public static List<char> GetCorrectAnswersList(List<string> answers)
         {
-            List<string> rawAnswers = answers;
-            List<char> correct = new List<char>();
+            List<char> correctOnes = new List<char>();
 
-            foreach (string item in rawAnswers)
+            foreach (string answer in answers)
             {
-                if (item.Contains('*'))
+                if (answer.Contains('*'))
                 {
-                    correct.Add(item[0]);
+                    correctOnes.Add(answer[0]); // getting only Keys of correct answers located in ANSWERS_KEYS
                 }
             }
-            return correct;
+            return correctOnes;
         }
 
 
@@ -147,10 +153,25 @@ namespace QuizzMaker
 
             foreach (string answer in answers)
             {
+                if (answer.Contains('*'))
+                {
+                    List<char> answerParsed = new List<char>();
 
-                string cleaned = answer.Trim('*');
-                cleanAnswers.Add(cleaned);
+                    foreach (char letter in answer)
+                    {
+                        if(letter != '*')
+                        {
+                            answerParsed.Add(letter);
+                        }                        
+                    }
 
+                    string cleaned = string.Concat(answerParsed);                   
+                    cleanAnswers.Add(cleaned);
+                }
+                else
+                {
+                    cleanAnswers.Add(answer);
+                }
             }
             return cleanAnswers;
         }
