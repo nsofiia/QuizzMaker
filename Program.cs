@@ -5,18 +5,21 @@ namespace QuizzMaker;
 
 class Program
 {
-    const double MAX_SCORE = 100.0;
+    public const double MAX_SCORE = 100.0;
     public const double PASSING_SCORE = 85.0;
-    public const string ANSWERS_KEYS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; //used for orderly answers display and as a key to each answer frokm user's input 
+    public const string ANSWERS_KEYS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    // used for orderly answers display and as a key to each answer from user's input 
 
     static void Main(string[] args)
     {
         Random rnd = new Random();
-        PrintIntro();
-        char userChoice = PrintLoadFromStorageGetAnswer(); // chice to open existing saved file in local storage or create new file
+        PrintIntro();      
+        char userChoice = PrintLoadFromStorageGetAnswer();
+        // chice to open existing saved file in local storage or create new file
         var questionsList = new List<Question>();
 
-        if (userChoice == 'Q')// Q - create new Test; T - load existing file from local 
+        if (userChoice == 'Q')
+        // Q - create new Test; T - load existing file from local 
         {
             while (userChoice == 'Q')
             {
@@ -24,11 +27,13 @@ class Program
                 newQuestion.question = GetQuestionTitle();
                 newQuestion.answers = GetAllAnswers();
                 questionsList.Add(newQuestion);
-                userChoice = PrintContinueChoises(); //user's desision: create another question||continue
+                userChoice = PrintContinueChoises();
+                // user's desision: create another question||continue
             }
 
             SaveListToExternalXml(questionsList);
-            userChoice = PrintStartTestChoises(); //user's desision if to start test or exit
+            userChoice = PrintStartTestChoises();
+            //user's desision if to start test or exit
 
             if (userChoice != 'Y')
             {
@@ -48,19 +53,22 @@ class Program
 
             while (questionsList.Count > 0)
             {
-                Console.Clear();
                 int selectedRandomQuestion = rnd.Next(questionsList.Count);
 
                 PrintQuestion(questionNumberCounter, questionsList[selectedRandomQuestion].question);
                 questionNumberCounter++;
 
-                var orderedAnswers = OrderAnswersAndKeys(questionsList[selectedRandomQuestion].answers);//create list of ordered answers
-                var correctAnswers = GetCorrectAnswersList(orderedAnswers);  // get correct answers to compare input
-                var cleanAnswersForPrint = CleanAnswers(orderedAnswers); // clean list from hints for printing
+                var orderedAnswers = OrderAnswersAndKeys(questionsList[selectedRandomQuestion].answers);
+                //create list of ordered answers
+                var correctAnswers = GetCorrectAnswersList(orderedAnswers);
+                // get correct answers to compare input
+                var cleanAnswersForPrint = CleanAnswers(orderedAnswers);
+                // clean list from hints for printing
 
                 PrintAnswers(cleanAnswersForPrint);
 
-                string answer = UserEntryValidation().ToUpper(); // get answers for this question
+                string answer = UserEntryValidation();
+                // get answers for this question
 
                 bool answeredCorrectly = CheckUserAnswers(answer, correctAnswers);
                 //check if answer is in correct answers list, score/not score count
@@ -75,9 +83,7 @@ class Program
 
             }
 
-            PrintScore(score, MAX_SCORE);
             PrintPassFail(score);
-            Console.ReadKey();
         }
         else
         {

@@ -6,22 +6,8 @@ namespace QuizzMaker
 {
     public class Logic
     {
-        const string PATH = @"/Users/sofi/Documents/ListOfQuestions.xml";
+        const string PATH = @"ListOfQuestions.xml";
         static readonly XmlSerializer xml = new XmlSerializer(typeof(List<Question>));
-
-
-        public static string UserEntryValidation()
-        {
-            string entry = Console.ReadLine();
-
-            while (string.IsNullOrEmpty(entry) || string.IsNullOrWhiteSpace(entry))
-            {
-                PrintEmptyError();
-                entry = Console.ReadLine();
-            }
-            return entry;
-        }
-
 
         /// <summary>
         /// get all answers
@@ -63,7 +49,8 @@ namespace QuizzMaker
         {
             try
             {
-                using (FileStream file = File.Create(PATH)) //write list of questions into the external file.xml
+                using (FileStream file = File.Create(PATH))
+                //write list of questions into the external file.xml
                 {
                     xml.Serialize(file, list);
                 }
@@ -72,8 +59,8 @@ namespace QuizzMaker
             {
                 Console.WriteLine(e.Message);
             }
-
         }
+
 
         /// <summary>
         /// retrieve data from xml
@@ -87,7 +74,8 @@ namespace QuizzMaker
 
             try
             {
-                using (FileStream file = File.OpenRead(PATH)) // retrieve the list from saved xml
+                using (FileStream file = File.OpenRead(PATH))
+                // retrieve the list from saved xml
                 {
                     list = xml.Deserialize(file) as List<Question>;
                 }
@@ -135,7 +123,8 @@ namespace QuizzMaker
             {
                 if (answer.Contains('*'))
                 {
-                    correctOnes.Add(answer[0]); // getting only Keys of correct answers located in ANSWERS_KEYS
+                    correctOnes.Add(answer[0]);
+                    // getting only Keys of correct answers located in ANSWERS_KEYS
                 }
             }
             return correctOnes;
@@ -153,25 +142,7 @@ namespace QuizzMaker
 
             foreach (string answer in answers)
             {
-                if (answer.Contains('*'))
-                {
-                    List<char> answerParsed = new List<char>();
-
-                    foreach (char letter in answer)
-                    {
-                        if(letter != '*')
-                        {
-                            answerParsed.Add(letter);
-                        }                        
-                    }
-
-                    string cleaned = string.Concat(answerParsed);                   
-                    cleanAnswers.Add(cleaned);
-                }
-                else
-                {
-                    cleanAnswers.Add(answer);
-                }
+                cleanAnswers.Add(answer.Replace('*', ' '));
             }
             return cleanAnswers;
         }
@@ -188,7 +159,8 @@ namespace QuizzMaker
         {
             bool answeredCorrect = false;
 
-            for (int i = 0; i < correctList.Count; i++) //comparing letters in the user answer with letters in the correct list
+            for (int i = 0; i < correctList.Count; i++)
+            //comparing letters in the user answer with letters in the correct list
             {
                 if (userAns.Contains(correctList[i]))
                 {
@@ -198,8 +170,6 @@ namespace QuizzMaker
 
             return answeredCorrect;
         }
-
-
 
     }
 }

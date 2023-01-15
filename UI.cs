@@ -1,8 +1,24 @@
 ﻿using System;
+using static System.Formats.Asn1.AsnWriter;
+
 namespace QuizzMaker
 {
     public class UI
-    {       
+    {
+
+        public static string UserEntryValidation()
+        {
+            string entry = Console.ReadLine();
+
+            while (string.IsNullOrEmpty(entry) || string.IsNullOrWhiteSpace(entry))
+            {
+                PrintEmptyError();
+                entry = Console.ReadLine();
+            }
+            return entry.ToUpper();
+        }
+
+
         public static void PrintIntro()
         {
             Console.WriteLine("Test knowledge!\n");
@@ -22,8 +38,6 @@ namespace QuizzMaker
             }
             return userAnswer;
         }
-
-
 
 
         public static void PrintEnterTitleMessage()
@@ -138,6 +152,7 @@ namespace QuizzMaker
 
         public static void PrintQuestion(int numberOfQuestion, string question)
         {
+            Console.Clear();
             Console.WriteLine("Question " + numberOfQuestion + ":\n" + question);
         }
 
@@ -158,6 +173,9 @@ namespace QuizzMaker
 
         public static void PrintPassFail(double presentScore)
         {
+            Console.Clear();
+            Console.WriteLine($"All questions are completed with score: {presentScore}% out of {Program.MAX_SCORE}%");
+
             if (presentScore >= Program.PASSING_SCORE)
             {
                 Console.WriteLine("You passed!");
@@ -166,22 +184,17 @@ namespace QuizzMaker
             {
                 Console.WriteLine("Didn't pass.");
             }
+
+            Console.ReadKey();
             Console.WriteLine("Test exit :)");
-        }
-
-
-
-        public static void PrintScore(double presentScore, double maxScore)
-        {
-            Console.Clear();
-            Console.WriteLine($"All questions are completed with score: {presentScore}% out of {maxScore}%");
         }
 
 
         public static void NoFileMessage()
         {
             Console.Clear();
-            Console.WriteLine("No questions found, restart to create a new test"); //is it possible to jump to the start?
+            Console.WriteLine("No questions found, restart to create a new test");
+            //is it possible to jump to the start?
             Console.ReadKey();
         }
 
